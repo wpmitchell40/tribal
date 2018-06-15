@@ -15,8 +15,7 @@ import (
 )
 
 var (
-	sl_conf      = flag.String("slconf", "/tribalslack/slackconf.json", "The location of the tribalslack configuration JSON file")
-	storage_conf = flag.String("storageconf", "/storage/storageconf.json", "The location of the database configuration JSON file")
+	sl_conf = "/tribalslack/slackconf.json"
 )
 
 type TribalServer struct {
@@ -44,11 +43,6 @@ func main() {
 		slconf:sl_conf,
 	}
 	err = s.RunMetricsBot()
-}
-
-func init() {
-	flag.StringVar(sl_conf, "slc", "/tribalslack/slackconf.json", "The location of the tribalslack configuration JSON file")
-	flag.StringVar(storage_conf, "dbc", "/storage/storageconf.json", "The location of the database configuration JSON file")
 }
 
 func determineListenAddress() (string, error) {
@@ -120,7 +114,7 @@ func (s TribalServer) ControllerHandler(w http.ResponseWriter, r *http.Request) 
 
 func ConfigureSlack() (*tribalslack.SlackConfiguration, error) {
 	dir, _ := os.Getwd()
-	path := dir + *sl_conf
+	path := dir + sl_conf
 	file, _ := os.Open(path)
 	decoder := json.NewDecoder(file)
 	var configuration tribalslack.SlackConfiguration
