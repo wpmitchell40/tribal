@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	"fmt"
 )
 var SlackAPI ="https://api.groupme.com/v3/bots/post"
 var Token = "9uAyrqJby8XMCe8oM6UiWEfk"
@@ -49,8 +50,11 @@ func CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) 
 		if err != nil {
 			return err
 		}
+		fmt.Println(r.Form)
 		challenge := r.Form.Get("challenge")
+		fmt.Println(challenge)
 		token := r.Form.Get("token")
+		fmt.Println(token)
 		if challenge != "" && token == Token {
 			PostChallengeResponse(challenge)
 			return nil
