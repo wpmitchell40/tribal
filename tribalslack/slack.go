@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 	"time"
-	"fmt"
+	"encoding/json"
 )
 var SlackAPI ="https://api.groupme.com/v3/bots/post"
 var Token = "9uAyrqJby8XMCe8oM6UiWEfk"
@@ -17,6 +17,12 @@ type SlackConfiguration struct {
 	ClientID     string
 	ClientSecret string
 	AppID        string
+}
+
+type Challenge struct {
+	Type string
+	Token string
+	Challenge string
 }
 
 type ScoreQueryFields struct {
@@ -46,17 +52,15 @@ func CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) 
 		if r.Body == nil {
 			return errors.New("Please send a request body")
 		}
-		err := r.ParseForm()
+		decoder := json.NewDecoder(r.Body)
+		var c Challenge
+		err := decoder.Decode(&c)
 		if err != nil {
-			return err
+			panic(err)
 		}
-		fmt.Println(r.Form)
-		challenge := r.Form.Get("challenge")
-		fmt.Println(challenge)
-		token := r.Form.Get("token")
-		fmt.Println(token)
-		if challenge != "" && token == Token {
-			PostChallengeResponse(challenge)
+		defer r.Body.Close()
+		if c.Challenge != "" && c.Token == Token {
+			PostChallengeResponse(c.Challenge)
 			return nil
 		}
 	}
