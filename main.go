@@ -66,18 +66,11 @@ func (s TribalServer) RunMetricsBot() (err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	mux := http.NewServeMux()
-	mux.HandleFunc("/slash", s.SlashPostHandler)
-	if err := http.ListenAndServe(addr, mux); err != nil {
+	http.HandleFunc("/", s.SlashPostHandler)
+	log.Printf("Listening on %s...\n", addr)
+	if err := http.ListenAndServe(addr, nil); err != nil {
 		panic(err)
 	}
-	/*
-	mux = http.NewServeMux()
-	mux.HandleFunc("/controller", s.ControllerHandler)
-	if err := http.ListenAndServe(addr, mux); err != nil {
-		panic(err)
-	}
-	*/
 	return nil
 }
 
