@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -14,22 +13,13 @@ import (
 	"github.com/nlopes/slack"
 )
 
-var (
-	sl_conf = "/tribalslack/slackconf.json"
-)
-
 type TribalServer struct {
 	bot *bot.Bot
-	slconf *tribalslack.SlackConfiguration
 }
 
 func main() {
 	flag.Parse()
-	sl_conf, err := ConfigureSlack()
-	if err != nil {
-		log.Fatal(err)
-	}
-	api := slack.New(sl_conf.Token)
+	api := slack.New("9uAyrqJby8XMCe8oM6UiWEfk")
 	users, err := api.GetUsers()
 	if err != nil {
 		log.Fatal(err)
@@ -40,7 +30,7 @@ func main() {
 	}
 	s := TribalServer{
 		bot: b,
-		slconf:sl_conf,
+
 	}
 	err = s.RunMetricsBot()
 }
@@ -75,7 +65,7 @@ func NewBot(client slack.Client, users []slack.User) (*bot.Bot, error) {
 }
 
 func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
-	err := s.slconf.CheckMessageForChallengeAndRespond(w, r)
+	err := tribalslack.CheckMessageForChallengeAndRespond(w, r)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,17 +101,4 @@ func (s TribalServer) ControllerHandler(w http.ResponseWriter, r *http.Request) 
 	log.Println("Unable to log response")
 }
 */
-
-func ConfigureSlack() (*tribalslack.SlackConfiguration, error) {
-	dir, _ := os.Getwd()
-	path := dir + sl_conf
-	file, _ := os.Open(path)
-	decoder := json.NewDecoder(file)
-	var configuration tribalslack.SlackConfiguration
-	if err := decoder.Decode(&configuration); err != nil {
-		log.Fatal("error in decoder")
-		return nil, err
-	}
-	return &configuration, nil
-}
 

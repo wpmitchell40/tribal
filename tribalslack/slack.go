@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 )
+var SlackAPI ="https://api.groupme.com/v3/bots/post"
+var Token = "9uAyrqJby8XMCe8oM6UiWEfk"
 
 type SlackConfiguration struct {
 	SlackAPI     string
@@ -22,13 +24,13 @@ type ScoreQueryFields struct {
 	Report bool
 }
 
-func (slackConf SlackConfiguration) PostChallengeResponse(challenge string) error {
+func PostChallengeResponse(challenge string) error {
 	slackClient := http.Client{}
 	form := url.Values{}
-	form.Add("token", slackConf.Token)
+	form.Add("token", Token)
 	form.Add("challenge", challenge)
 	form.Add("type", "url_verification")
-	req, err := http.NewRequest("POST", slackConf.SlackAPI, strings.NewReader(form.Encode()))
+	req, err := http.NewRequest("POST", SlackAPI, strings.NewReader(form.Encode()))
 	if err != nil {
 		return err
 	}
@@ -38,7 +40,7 @@ func (slackConf SlackConfiguration) PostChallengeResponse(challenge string) erro
 	return err
 }
 
-func (sl SlackConfiguration)CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) error {
+func CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) error {
 	if r.Method == "POST" {
 		if r.Body == nil {
 			return errors.New("Please send a request body")
@@ -49,8 +51,8 @@ func (sl SlackConfiguration)CheckMessageForChallengeAndRespond(w http.ResponseWr
 		}
 		challenge := r.Form.Get("challenge")
 		token := r.Form.Get("token")
-		if challenge != "" && token == sl.Token {
-			sl.PostChallengeResponse(challenge)
+		if challenge != "" && token == Token {
+			PostChallengeResponse(challenge)
 			return nil
 		}
 	}
