@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 	"encoding/json"
+	"io/ioutil"
+	"fmt"
 )
 var SlackAPI ="https://api.groupme.com/v3/bots/post"
 var Token = "9uAyrqJby8XMCe8oM6UiWEfk"
@@ -52,12 +54,17 @@ func CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) 
 		if r.Body == nil {
 			return errors.New("Please send a request body")
 		}
-		decoder := json.NewDecoder(r.Body)
-		var c Challenge
-		err := decoder.Decode(&c)
+		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println(string(body))
+		var c Challenge
+		err = json.Unmarshal(body, &c)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(c)
 		defer r.Body.Close()
 		if c.Challenge != "" && c.Token == Token {
 			PostChallengeResponse(c.Challenge)
