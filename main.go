@@ -22,11 +22,11 @@ func main() {
 	api := slack.New("9uAyrqJby8XMCe8oM6UiWEfk")
 	users, err := api.GetUsers()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	b, err := NewBot(*api, users)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	s := TribalServer{
 		bot: b,
@@ -48,7 +48,7 @@ func (s TribalServer) RunMetricsBot() (err error) {
 	// TODO establish a controller
 	addr, err := determineListenAddress()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	http.HandleFunc("/", s.SlashPostHandler)
 	log.Printf("Listening on %s...\n", addr)
@@ -67,12 +67,12 @@ func NewBot(client slack.Client, users []slack.User) (*bot.Bot, error) {
 func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 	err := tribalslack.CheckMessageForChallengeAndRespond(w, r)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	// TODO: determine criteria of message we care about
 	command, err := slack.SlashCommandParse(r)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	switch caseVal := tribalslack.ParseCommand(command.Text); caseVal {
 	case "rate":
@@ -80,11 +80,11 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 	case "score":
 		err = s.bot.InitiateScoreQuery(command)
 	default:
-		log.Fatal(fmt.Errorf("Unknown slash command"))
+		fmt.Println(fmt.Errorf("Unknown slash command"))
 	}
 	if err != nil {
 		s.bot.InitiateError(command)
-		log.Fatal(fmt.Errorf("Bad Slash Command"))
+		fmt.Println(fmt.Errorf("Bad Slash Command"))
 	}
 	return
 }
@@ -93,12 +93,12 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 func (s TribalServer) ControllerHandler(w http.ResponseWriter, r *http.Request) {
 	slackMetricQuestion, err := s.slc.CreateSlackMessage(w, r)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 		return
 	}
 	err = s.slc.PostNewMetric(slackMetricQuestion)
 	s.bot.DataStorage.StoreMetricQuestionData(slackMetricQuestion)
-	log.Println("Unable to log response")
+	fmt.Println("Unable to log response")
 }
 */
 
