@@ -54,8 +54,8 @@ func CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) 
 		var c Challenge
 		err = json.Unmarshal(body, &c)
 		if err != nil {
-			fmt.Println(err)
-			return err
+			fmt.Println("No Challenge Detected")
+			return nil
 		}
 		defer r.Body.Close()
 		if c.Challenge != "" && c.Token == Token {
