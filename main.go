@@ -74,6 +74,7 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println(command)
 	switch caseVal := tribalslack.ParseCommand(command.Text); caseVal {
 	case "rate":
 		fmt.Println("rate found")
