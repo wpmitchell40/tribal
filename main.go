@@ -65,10 +65,11 @@ func NewBot(client slack.Client, users []slack.User) (*bot.Bot, error) {
 }
 
 func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
-	err := tribalslack.CheckMessageForChallengeAndRespond(w, r)
+	/*err := tribalslack.CheckMessageForChallengeAndRespond(w, r)
 	if err != nil {
 		fmt.Println(err)
 	}
+	*/
 	// TODO: determine criteria of message we care about
 	command, err := slack.SlashCommandParse(r)
 	if err != nil {
