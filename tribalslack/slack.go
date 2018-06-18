@@ -37,10 +37,7 @@ type ScoreQueryFields struct {
 }
 
 func PostChallengeResponse(w http.ResponseWriter, challenge string) error {
-	code, err := w.Write([]byte(challenge))
-	if code != 200 {
-		fmt.Println("Received a non 200 http resonse from slack")
-	}
+	_, err := w.Write([]byte(challenge))
 	return err
 }
 
@@ -51,19 +48,22 @@ func CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) 
 		}
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
+			return err
 		}
-		fmt.Println(string(body))
 		var c Challenge
 		err = json.Unmarshal(body, &c)
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
+			return err
 		}
-		fmt.Println(c)
 		defer r.Body.Close()
 		if c.Challenge != "" && c.Token == Token {
-			PostChallengeResponse(w, c.Challenge)
-			return nil
+			err = PostChallengeResponse(w, c.Challenge)
+			if err != nil {
+				fmt.Println(err)
+				return err
+			}
 		}
 	}
 	return nil
