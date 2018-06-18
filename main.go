@@ -72,6 +72,7 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: determine criteria of message we care about
 	command, err := slack.SlashCommandParse(r)
 	if err != nil {
+		fmt.Println("error in slash command parse")
 		fmt.Println(err)
 	}
 	fmt.Println(command)
