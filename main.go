@@ -52,6 +52,7 @@ func (s TribalServer) RunMetricsBot() (err error) {
 		fmt.Println(err)
 	}
 	http.HandleFunc("/", s.SlashPostHandler)
+	http.HandleFunc("/challenge", s.ChallengePostHandler)
 	log.Printf("Listening on %s...\n", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		panic(err)
@@ -70,16 +71,7 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 		if r.Body == nil {
 			w.Write([]byte("Please Send a Body in your http Request"))
 		}
-		body, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
-		if err != nil {
-			fmt.Println(err)
-			panic(err)
-		}
-		err = tribalslack.CheckMessageForChallengeAndRespond(w, body)
-		if err != nil {
-			fmt.Println(err)
-		}
 		// TODO: determine criteria of message we care about
 		command, err := slack.SlashCommandParse(r)
 		if err != nil {
@@ -105,6 +97,24 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Please Send a POST http request"))
 	}
 	return
+}
+
+func (s TribalServer) ChallengePostHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		if r.Body == nil {
+			w.Write([]byte("Please Send a Body in your http Request"))
+		}
+		body, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		err = tribalslack.CheckMessageForChallengeAndRespond(w, body)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 }
 
 /*
