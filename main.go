@@ -76,8 +76,10 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch caseVal := tribalslack.ParseCommand(command.Text); caseVal {
 	case "rate":
+		fmt.Println("rate found")
 		err = s.bot.InitiateRateQuery(command)
 	case "score":
+		fmt.Println("score found")
 		err = s.bot.InitiateScoreQuery(command)
 	default:
 		fmt.Println(fmt.Errorf("Unknown slash command"))

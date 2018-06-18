@@ -46,6 +46,8 @@ func (b *Bot) InitiateScoreQuery(command slack.SlashCommand) error {
 	 if err != nil {
 	 	return err
 	 }
+	 fmt.Println("QueryFields:")
+	 fmt.Println(queryFields)
 	 validUser := false
 	 index := -1
 	 for i, v := range b.Users {
