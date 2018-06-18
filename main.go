@@ -22,7 +22,9 @@ func main() {
 	flag.Parse()
 	api := slack.New("9uAyrqJby8XMCe8oM6UiWEfk")
 	users, err := api.GetUsers()
+	channels, err := api.GetChannels(false)
 	fmt.Println(users)
+	fmt.Println(channels)
 	if err != nil {
 		fmt.Println(err)
 	}
