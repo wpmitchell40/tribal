@@ -3,7 +3,6 @@ package tribalslack
 import (
 	"errors"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 	"encoding/json"
@@ -27,25 +26,21 @@ type Challenge struct {
 	Challenge string
 }
 
+type ChallengeResonse struct {
+	Challenge string
+}
+
 type ScoreQueryFields struct {
 	User     string
 	Period time.Time
 	Report bool
 }
 
-func PostChallengeResponse(challenge string) error {
-	slackClient := http.Client{}
-	form := url.Values{}
-	form.Add("token", Token)
-	form.Add("challenge", challenge)
-	form.Add("type", "url_verification")
-	req, err := http.NewRequest("POST", SlackAPI, strings.NewReader(form.Encode()))
-	if err != nil {
-		return err
+func PostChallengeResponse(w http.ResponseWriter, challenge string) error {
+	code, err := w.Write([]byte(challenge))
+	if code != 200 {
+		fmt.Println("Received a non 200 http resonse from slack")
 	}
-	req.PostForm = form
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	_, err = slackClient.Do(req)
 	return err
 }
 
@@ -67,7 +62,7 @@ func CheckMessageForChallengeAndRespond(w http.ResponseWriter, r *http.Request) 
 		fmt.Println(c)
 		defer r.Body.Close()
 		if c.Challenge != "" && c.Token == Token {
-			PostChallengeResponse(c.Challenge)
+			PostChallengeResponse(w, c.Challenge)
 			return nil
 		}
 	}
