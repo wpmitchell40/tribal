@@ -11,6 +11,7 @@ import (
 	"tribal_bot/storage"
 
 	"github.com/nlopes/slack"
+	"io/ioutil"
 )
 
 type TribalServer struct {
@@ -65,30 +66,43 @@ func NewBot(client slack.Client, users []slack.User) (*bot.Bot, error) {
 }
 
 func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
-	err := tribalslack.CheckMessageForChallengeAndRespond(w, r)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// TODO: determine criteria of message we care about
-	command, err := slack.SlashCommandParse(r)
-	if err != nil {
-		fmt.Println("error in slash command parse")
-		fmt.Println(err)
-	}
-	fmt.Println(command)
-	switch caseVal := tribalslack.ParseCommand(command.Text); caseVal {
-	case "rate":
-		fmt.Println("rate found")
-		err = s.bot.InitiateRateQuery(command)
-	case "score":
-		fmt.Println("score found")
-		err = s.bot.InitiateScoreQuery(command)
-	default:
-		fmt.Println(fmt.Errorf("Unknown slash command"))
-	}
-	if err != nil {
-		s.bot.InitiateError(command)
-		fmt.Println(fmt.Errorf("Bad Slash Command"))
+	if r.Method == "POST" {
+		if r.Body == nil {
+			w.Write([]byte("Please Send a Body in your http Request"))
+		}
+		body, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		err = tribalslack.CheckMessageForChallengeAndRespond(w, body)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// TODO: determine criteria of message we care about
+		command, err := slack.SlashCommandParse(r)
+		if err != nil {
+			fmt.Println("error in slash command parse")
+			fmt.Println(err)
+		}
+		fmt.Println(command)
+		switch caseVal := tribalslack.ParseCommand(command.Text); caseVal {
+		case "rate":
+			fmt.Println("rate found")
+			err = s.bot.InitiateRateQuery(command)
+		case "score":
+			fmt.Println("score found")
+			err = s.bot.InitiateScoreQuery(command)
+		default:
+			fmt.Println(fmt.Errorf("Unknown slash command"))
+		}
+		if err != nil {
+			s.bot.InitiateError(command)
+			fmt.Println(fmt.Errorf("Bad Slash Command"))
+		}
+	} else {
+		w.Write([]byte("Please Send a POST http request"))
 	}
 	return
 }
