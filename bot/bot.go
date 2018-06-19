@@ -10,6 +10,7 @@ import (
 	"time"
 	"strconv"
 	"fmt"
+	"net/http"
 )
 
 type Bot struct {
@@ -41,32 +42,20 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand) error {
 	return nil
 }
 
-func (b *Bot) InitiateScoreQuery(command slack.SlashCommand) error {
+func (b *Bot) InitiateScoreQuery(command slack.SlashCommand, w http.ResponseWriter, r *http.Request) error {
 	 queryFields, err := b.parseCommandForQueryFields(command.Text)
 	 if err != nil {
 	 	return err
 	 }
 	 fmt.Println("QueryFields:")
 	 fmt.Println(queryFields)
-	 validUser := false
-	 index := -1
-	 for i, v := range b.Users {
-	 	if strings.Contains(queryFields.User,v.ID) {
-	 		validUser = true
-	 		index = i
-		}
+	 userToScore := queryFields.User
+	 score, err := b.DataStorage.GetUserScore(userToScore, queryFields)
+	 if err != nil {
+	 	w.Write([]byte("An error occurred with your request"))
 	 }
-	 if validUser {
-	 	userToScore := b.Users[index].ID
-	 	params := slack.PostMessageParameters{}
-	 	score, err := b.DataStorage.GetUserScore(userToScore, queryFields)
-	 	if err != nil {
-			b.SlackAPI.PostMessage(command.UserID,"", params)
-		}
-		text := fmt.Sprintf("The TribalScore for that user in that timeframe is %f", score)
-	 	b.SlackAPI.PostMessage(command.UserID, text, params)
-	 }
-
+	 text := fmt.Sprintf("The TribalScore for that user in that timeframe is %f", score)
+	 w.Write([]byte(text))
 	return nil
 }
 

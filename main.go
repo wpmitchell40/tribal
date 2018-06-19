@@ -22,9 +22,7 @@ func main() {
 	flag.Parse()
 	api := slack.New("9uAyrqJby8XMCe8oM6UiWEfk")
 	users, err := api.GetUsers()
-	channels, err := api.GetChannels(false)
-	fmt.Println(users)
-	fmt.Println(channels)
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -88,7 +86,7 @@ func (s TribalServer) SlashPostHandler(w http.ResponseWriter, r *http.Request) {
 			err = s.bot.InitiateRateQuery(command)
 		case "score":
 			fmt.Println("score found")
-			err = s.bot.InitiateScoreQuery(command)
+			err = s.bot.InitiateScoreQuery(command, w, r)
 		default:
 			fmt.Println(fmt.Errorf("Unknown slash command"))
 		}
