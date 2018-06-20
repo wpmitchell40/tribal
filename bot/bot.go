@@ -38,12 +38,32 @@ func (b *Bot) InitiateError(command slack.SlashCommand) {
 		"An error occurred with your most recent Tribal command, please check your syntax and try again", params)
 }
 
-func (b *Bot) InitiateRateQuery(command slack.SlashCommand) error {
+func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWriter, r *http.Request) error {
+	queryFields, err := b.parseCommandForRateQueryFields(command.Text)
+	if err != nil {
+		w.Write([]byte("An error occurred with your request"))
+		return err
+	}
+	fmt.Println("Rate Query Fields:")
+	fmt.Println(queryFields)
+	userToScore := queryFields.UserBeingEvaluated
+
 	return nil
 }
 
+func (b *Bot) parseCommandForRateQueryFields(text string) (*tribalslack.RateQueryFields, error) {
+	fields := strings.Fields(text)
+	if len(fields) < 3 || len(fields) > 4 {
+		return nil, errors.New("rate slash command is invalid (wrong number of arguments)")
+	}
+	rateFields := tribalslack.RateQueryFields{}
+	rateFields.UserTakingQuery = fields[1]
+	rateFields.UserBeingEvaluated = fields[3]
+	return &rateFields, nil
+}
+
 func (b *Bot) InitiateScoreQuery(command slack.SlashCommand, w http.ResponseWriter, r *http.Request) error {
-	 queryFields, err := b.parseCommandForQueryFields(command.Text)
+	 queryFields, err := b.parseCommandForScoreQueryFields(command.Text)
 	 if err != nil {
 	 	return err
 	 }
@@ -53,13 +73,14 @@ func (b *Bot) InitiateScoreQuery(command slack.SlashCommand, w http.ResponseWrit
 	 score, err := b.DataStorage.GetUserScore(userToScore, queryFields)
 	 if err != nil {
 	 	w.Write([]byte("An error occurred with your request"))
+	 	return err
 	 }
 	 text := fmt.Sprintf("The TribalScore for that user in that timeframe is %f", score)
 	 w.Write([]byte(text))
 	return nil
 }
 
-func (b *Bot) parseCommandForQueryFields(text string) (*tribalslack.ScoreQueryFields, error) {
+func (b *Bot) parseCommandForScoreQueryFields(text string) (*tribalslack.ScoreQueryFields, error) {
 	fields := strings.Fields(text)
 	if len(fields) < 2 || len(fields) > 4 {
 		return nil, errors.New("score slash command is invalid")

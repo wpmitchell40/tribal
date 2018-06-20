@@ -7,8 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 )
-var SlackAPI ="https://api.groupme.com/v3/bots/post"
-var Token = "9uAyrqJby8XMCe8oM6UiWEfk"
+var Token = ""
 
 type SlackConfiguration struct {
 	SlackAPI     string
@@ -32,6 +31,32 @@ type ScoreQueryFields struct {
 	User     string
 	Period time.Time
 	Report bool
+}
+
+type RateQueryFields struct {
+	UserTakingQuery string
+	UserBeingEvaluated string
+}
+
+type TribalQuery struct {
+	Text string
+	Attachments SlackAttachment
+}
+
+type SlackAttachment struct {
+	Text string
+	Fallback string
+	CallbackId string
+	Color string
+	AttachmentType string
+	Actions []SlackAction
+}
+
+type SlackAction struct {
+	Name string
+	Text string
+	Type string
+	Value string
 }
 
 func PostChallengeResponse(w http.ResponseWriter, challenge string) error {
@@ -64,4 +89,38 @@ func ParseCommand(command string)(string){
 		return "score"
 	}
 	return ""
+}
+
+func CreateTribalQuery() (TribalQuery){
+	ActionYes := SlackAction{
+		Name:"tribalresponse",
+		Text:"Yes",
+		Type:"button",
+		Value:"Yes",
+	}
+	ActionNo := SlackAction{
+		Name:"tribalresponse",
+		Text:"No",
+		Type:"button",
+		Value:"No",
+	}
+	ActionNA := SlackAction{
+		Name:"tribalresponse",
+		Text:"N/A",
+		Type:"button",
+		Value:"N/A",
+	}
+	actions := []SlackAction{ActionYes,ActionNo,ActionNA}
+	Attachments := SlackAttachment{
+		Text:"If you do not feel you have interacted enough to answer, please choose N/A",
+		Fallback:"An Error occurred, you were unable to rate the user",
+		CallbackId:"tribal_response",
+		Color:"#3AA3E3",
+		AttachmentType:"default",
+		Actions:actions,
+	}
+	return TribalQuery{
+		Text:"",
+		Attachments:Attachments,
+	}
 }

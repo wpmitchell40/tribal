@@ -20,7 +20,7 @@ type TribalServer struct {
 
 func main() {
 	flag.Parse()
-	api := slack.New("9uAyrqJby8XMCe8oM6UiWEfk")
+	api := slack.New("")
 	users, err := api.GetUsers()
 
 	if err != nil {
