@@ -25,6 +25,11 @@
 			"ImportPath": "github.com/nlopes/slack",
 			"Comment": "v0.2.0-53-g5fd1f5d",
 			"Rev": "5fd1f5d20fd04d67edb607282fb79bb653eb3262"
+		},
+		{
+			"ImportPath": "github.com/nlopes/slack/slackevents",
+			"Comment": "v0.2.0-53-g5fd1f5d",
+			"Rev": "5fd1f5d20fd04d67edb607282fb79bb653eb3262"
 		}
 	]
 }
