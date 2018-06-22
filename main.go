@@ -12,6 +12,7 @@ import (
 
 	"github.com/nlopes/slack"
 	"io/ioutil"
+	"encoding/json"
 )
 
 type TribalServer struct {
@@ -131,7 +132,12 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println(err)
 			panic(err)
 		}
-		fmt.Println(string(body))
+		c := slack.AttachmentActionCallback{}
+		err = json.Unmarshal(body, &c)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(c)
 	}
 }
 /*
