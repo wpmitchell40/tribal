@@ -133,6 +133,7 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println(err)
 			panic(err)
 		}
+		fmt.Println(string(body))
 		c, err := slackevents.ParseActionEvent(string(body))
 		if err != nil {
 			fmt.Println(err)
