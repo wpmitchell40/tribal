@@ -139,7 +139,7 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 		if err != nil {
 			fmt.Println(err)
 		}
-		err = json.Unmarshal(body, &c)
+		err = json.Unmarshal(realBody, &c)
 		if err != nil {
 			fmt.Println(err)
 		}
