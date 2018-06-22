@@ -42,6 +42,7 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 	queryFields, err := b.parseCommandForRateQueryFields(command.Text)
 	if err != nil {
 		w.Write([]byte("An error occurred with your request"))
+		fmt.Println(err)
 		return err
 	}
 	fmt.Println("Rate Query Fields:")
@@ -53,6 +54,7 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 
 func (b *Bot) parseCommandForRateQueryFields(text string) (*tribalslack.RateQueryFields, error) {
 	fields := strings.Fields(text)
+	fmt.Println(fields)
 	if len(fields) < 3 || len(fields) > 4 {
 		return nil, errors.New("rate slash command is invalid (wrong number of arguments)")
 	}
@@ -67,7 +69,7 @@ func (b *Bot) InitiateScoreQuery(command slack.SlashCommand, w http.ResponseWrit
 	 if err != nil {
 	 	return err
 	 }
-	 fmt.Println("QueryFields:")
+	 fmt.Println("Score Query Fields:")
 	 fmt.Println(queryFields)
 	 userToScore := queryFields.User
 	 score, err := b.DataStorage.GetUserScore(userToScore, queryFields)
