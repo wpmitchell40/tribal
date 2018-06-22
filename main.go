@@ -133,7 +133,7 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println(err)
 			panic(err)
 		}
-		realBody := body[10:len(body)-1]
+		realBody := body[11:len(body)-3]
 		fmt.Println(string(realBody))
 		c, err := slackevents.ParseActionEvent(string(realBody))
 		if err != nil {
