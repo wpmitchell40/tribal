@@ -132,13 +132,18 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println(err)
 			panic(err)
 		}
-		c := slack.AttachmentActionCallback{}
+		c := Action{}
 		err = json.Unmarshal(body, &c)
 		if err != nil {
 			fmt.Println(err)
 		}
 		fmt.Println(c)
 	}
+}
+
+type Action struct {
+	payload slack.AttachmentActionCallback `json:"payload"`
+
 }
 /*
 func (s TribalServer) ControllerHandler(w http.ResponseWriter, r *http.Request) {
