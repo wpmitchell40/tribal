@@ -55,6 +55,7 @@ func (s TribalServer) RunMetricsBot() (err error) {
 	}
 	http.HandleFunc("/", s.SlashPostHandler)
 	http.HandleFunc("/challenge", s.ChallengePostHandler)
+	http.HandleFunc("/request", s.RequestPostHandler)
 	log.Printf("Listening on %s...\n", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		panic(err)
@@ -119,6 +120,20 @@ func (s TribalServer) ChallengePostHandler(w http.ResponseWriter, r *http.Reques
 	}
 }
 
+func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		if r.Body == nil {
+			w.Write([]byte("Please Send a Body in your http Request"))
+		}
+		body, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		fmt.Println(body)
+	}
+}
 /*
 func (s TribalServer) ControllerHandler(w http.ResponseWriter, r *http.Request) {
 	slackMetricQuestion, err := s.slc.CreateSlackMessage(w, r)
