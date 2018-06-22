@@ -131,7 +131,7 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println(err)
 			panic(err)
 		}
-		fmt.Println(body)
+		fmt.Println(string(body))
 	}
 }
 /*
