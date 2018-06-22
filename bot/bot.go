@@ -53,6 +53,7 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 	fmt.Println(userToScore)
 	query := tribalslack.CreateTribalQuery()
 	query.Text = fmt.Sprintf("Is %s currently performing at a high level?", userToScore)
+	fmt.Println(query)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(query)
