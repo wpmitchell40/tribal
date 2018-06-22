@@ -55,7 +55,7 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 func (b *Bot) parseCommandForRateQueryFields(text string) (*tribalslack.RateQueryFields, error) {
 	fields := strings.Fields(text)
 	fmt.Println(fields)
-	if len(fields) < 3 || len(fields) > 4 {
+	if len(fields) < 2 || len(fields) > 3{
 		return nil, errors.New("rate slash command is invalid (wrong number of arguments)")
 	}
 	rateFields := tribalslack.RateQueryFields{}
