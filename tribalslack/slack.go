@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 )
-var Token = ""
+var Token = "d7bffc23080740059982be80f194773e"
 
 type SlackConfiguration struct {
 	SlackAPI     string
