@@ -47,7 +47,7 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 	fmt.Println("Rate Query Fields:")
 	fmt.Println(queryFields)
 	userToScore := queryFields.UserBeingEvaluated
-
+	fmt.Println(userToScore)
 	return nil
 }
 
