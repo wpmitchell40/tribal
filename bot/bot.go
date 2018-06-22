@@ -45,6 +45,7 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 		fmt.Println(err)
 		return err
 	}
+	queryFields.UserTakingQuery = command.UserID
 	fmt.Println("Rate Query Fields:")
 	fmt.Println(queryFields)
 	userToScore := queryFields.UserBeingEvaluated
@@ -59,8 +60,7 @@ func (b *Bot) parseCommandForRateQueryFields(text string) (*tribalslack.RateQuer
 		return nil, errors.New("rate slash command is invalid (wrong number of arguments)")
 	}
 	rateFields := tribalslack.RateQueryFields{}
-	rateFields.UserTakingQuery = fields[1]
-	rateFields.UserBeingEvaluated = fields[3]
+	rateFields.UserBeingEvaluated = fields[2]
 	return &rateFields, nil
 }
 
