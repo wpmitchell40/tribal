@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"fmt"
 	"net/http"
+	"encoding/json"
 )
 
 type Bot struct {
@@ -50,6 +51,11 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 	fmt.Println(queryFields)
 	userToScore := queryFields.UserBeingEvaluated
 	fmt.Println(userToScore)
+	query := tribalslack.CreateTribalQuery()
+	query.Text = fmt.Sprintf("Is %s currently performing at a high level?", userToScore)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(query)
 	return nil
 }
 
