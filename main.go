@@ -127,14 +127,16 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 		if r.Body == nil {
 			w.Write([]byte("Please Send a Body in your http Request"))
 		}
-		c := slackevents.MessageAction{}
 		body, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 		if err != nil {
 			fmt.Println(err)
 			panic(err)
 		}
-
+		c, err := slackevents.ParseActionEvent(string(body))
+		if err != nil {
+			fmt.Println(err)
+		}
 		err = json.Unmarshal(body, &c)
 		if err != nil {
 			fmt.Println(err)
