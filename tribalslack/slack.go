@@ -39,24 +39,24 @@ type RateQueryFields struct {
 }
 
 type TribalQuery struct {
-	Text string
-	Attachments SlackAttachment
+	Text string `json:"text"`
+	Attachments SlackAttachment `json:"attachemnts"`
 }
 
 type SlackAttachment struct {
-	Text string
-	Fallback string
-	CallbackId string
-	Color string
-	AttachmentType string
-	Actions []SlackAction
+	Text string `json:"text"`
+	Fallback string `json:"fallback"`
+	CallbackId string `json:"callback_id"`
+	Color string `json:"color"`
+	AttachmentType string `json:"attachment_type"`
+	Actions []SlackAction `json:"actions"`
 }
 
 type SlackAction struct {
-	Name string
-	Text string
-	Type string
-	Value string
+	Name string `json:"name"`
+	Text string `json:"text"`
+	Type string `json:"type"`
+	Value string `json:"value"`
 }
 
 func PostChallengeResponse(w http.ResponseWriter, challenge string) error {
