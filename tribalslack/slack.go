@@ -40,7 +40,7 @@ type RateQueryFields struct {
 
 type TribalQuery struct {
 	Text string `json:"text"`
-	Attachments SlackAttachment `json:"attachments"`
+	Attachments []SlackAttachment `json:"attachments"`
 }
 
 type SlackAttachment struct {
@@ -111,7 +111,7 @@ func CreateTribalQuery() (TribalQuery){
 		Value:"N/A",
 	}
 	actions := []SlackAction{ActionYes,ActionNo,ActionNA}
-	Attachments := SlackAttachment{
+	Attachment := SlackAttachment{
 		Text:"If you do not feel you have interacted enough to answer, please choose N/A",
 		Fallback:"An Error occurred, you were unable to rate the user",
 		CallbackId:"tribal_response",
@@ -119,6 +119,7 @@ func CreateTribalQuery() (TribalQuery){
 		AttachmentType:"default",
 		Actions:actions,
 	}
+	Attachments := []SlackAttachment{Attachment}
 	return TribalQuery{
 		Text:"",
 		Attachments:Attachments,
