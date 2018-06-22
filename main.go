@@ -13,6 +13,7 @@ import (
 	"github.com/nlopes/slack"
 	"io/ioutil"
 	"encoding/json"
+	"github.com/nlopes/slack/slackevents"
 )
 
 type TribalServer struct {
@@ -126,13 +127,14 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 		if r.Body == nil {
 			w.Write([]byte("Please Send a Body in your http Request"))
 		}
+		c := slackevents.MessageAction{}
 		body, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 		if err != nil {
 			fmt.Println(err)
 			panic(err)
 		}
-		c := Action{}
+
 		err = json.Unmarshal(body, &c)
 		if err != nil {
 			fmt.Println(err)
@@ -141,10 +143,6 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-type Action struct {
-	payload slack.AttachmentActionCallback `json:"payload"`
-
-}
 /*
 func (s TribalServer) ControllerHandler(w http.ResponseWriter, r *http.Request) {
 	slackMetricQuestion, err := s.slc.CreateSlackMessage(w, r)
