@@ -40,7 +40,7 @@ type RateQueryFields struct {
 
 type TribalQuery struct {
 	Text string `json:"text"`
-	Attachments SlackAttachment `json:"attachemnts"`
+	Attachments SlackAttachment `json:"attachments"`
 }
 
 type SlackAttachment struct {
