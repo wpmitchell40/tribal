@@ -52,7 +52,7 @@ func (b *Bot) InitiateRateQuery(command slack.SlashCommand, w http.ResponseWrite
 	userToScore := queryFields.UserBeingEvaluated
 	fmt.Println(userToScore)
 	query := tribalslack.CreateTribalQuery()
-	query.Text = fmt.Sprintf("Is %s currently performing at a high level?", userToScore)
+	query.Text = fmt.Sprintf("Is <%s> currently performing at a high level?", userToScore)
 	fmt.Println(query)
 	final, err := json.Marshal(query)
 	if err != nil {
