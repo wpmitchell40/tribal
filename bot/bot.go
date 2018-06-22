@@ -60,7 +60,7 @@ func (b *Bot) parseCommandForRateQueryFields(text string) (*tribalslack.RateQuer
 		return nil, errors.New("rate slash command is invalid (wrong number of arguments)")
 	}
 	rateFields := tribalslack.RateQueryFields{}
-	rateFields.UserBeingEvaluated = fields[2]
+	rateFields.UserBeingEvaluated = fields[1]
 	return &rateFields, nil
 }
 
