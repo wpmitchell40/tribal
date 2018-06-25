@@ -12,8 +12,6 @@ import (
 
 	"github.com/nlopes/slack"
 	"io/ioutil"
-	"github.com/nlopes/slack/slackevents"
-	"bytes"
 )
 
 type TribalServer struct {
@@ -127,14 +125,11 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 		if r.Body == nil {
 			w.Write([]byte("Please Send a Body in your http Request"))
 		}
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(r.Body)
-		body := buf.String()
-		c, err := slackevents.ParseActionEvent(body)
-		if err != nil {
+		if err := r.ParseForm(); err != nil {
 			fmt.Println(err)
+			return
 		}
-		fmt.Println(c)
+		fmt.Println(r.PostForm.Get("message_ts"))
 	}
 }
 
