@@ -12,6 +12,8 @@ import (
 
 	"github.com/nlopes/slack"
 	"io/ioutil"
+	"github.com/nlopes/slack/slackevents"
+	"encoding/json"
 )
 
 type TribalServer struct {
@@ -129,8 +131,11 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(r.PostForm)
-		fmt.Println(r.PostForm.Get("payload"))
+		form := r.PostForm.Get("payload")
+		var c slackevents.MessageAction
+		err := json.Unmarshal([]byte(form), &c)
+		fmt.Println(err)
+		fmt.Println(c)
 	}
 }
 
