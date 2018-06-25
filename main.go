@@ -129,6 +129,8 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println(err)
 			return
 		}
+		fmt.Println(r.PostForm)
+		fmt.Println(r.Body)
 		fmt.Println(r.PostForm.Get("message_ts"))
 	}
 }
