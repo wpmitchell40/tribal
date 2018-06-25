@@ -136,7 +136,9 @@ func (s TribalServer) RequestPostHandler(w http.ResponseWriter, r *http.Request)
 		err := json.Unmarshal([]byte(form), &c)
 		fmt.Println(err)
 		fmt.Println(c)
-		fmt.Println(c.Actions[0])
+		fmt.Println(c.Actions[0].Text)
+		fmt.Println(c.Actions[0].Value)
+		fmt.Println(c.Actions[0].DataSource)
 	}
 }
 
